@@ -23,19 +23,25 @@ def routes():
 		('POST', '/login', login),
 		('GET', '/admin', admin),
 		('POST', '/admin/post', admin_post),
+		('POST', '/admin/post/<id>/draft', admin_post_draft),
 	]
 
 def root(request):
 	posts = db.iter_posts(allowed_flags=0)
 	logged_in = False
-	if request.get_secure_cookie('user_id', LOGIN_TIME):
+	if request.get_secure_cookie('username', LOGIN_TIME):
 		logged_in = True
 
 	return Response.render(request, 'root.jinja2', {'posts': posts, 'logged_in': logged_in})
 
 def post(request, id):
-	raise HTTPException(404, 'invalid post id')
-	return Response.render(request, 'posts.jinja2', {'posts': [post]})
+	post = db.get_post(id, allowed_flags=db.PostFlag.draft)
+	if post is None:
+		raise HTTPException(404, 'invalid post id')
+	flags, username, title, body = post
+	return Response.render(request, 'post.jinja2', {
+		'flags': flags, 'username': username, 'title': title, 'body': body,
+	})
 
 def login_form(request):
 	return Response.render(request, 'login.jinja2', {})
@@ -55,16 +61,17 @@ def login(request):
 
 def authed(f):
 	@functools.wraps(f)
-	def wrapper(request):
+	def wrapper(request, **kwargs):
 		username = request.get_secure_cookie('username', LOGIN_TIME)
 		if not username:
 			return Response(code=303, location='/login')
-		return f(request, username)
+		return f(request, username, **kwargs)
 	return wrapper
 
 @authed
 def admin(request, username):
-	return Response.render(request, 'admin.jinja2', {})
+	posts = db.iter_posts(allowed_flags=db.PostFlag.draft)
+	return Response.render(request, 'admin.jinja2', {'posts': posts})
 
 @authed
 def admin_post(request, username):
@@ -74,6 +81,15 @@ def admin_post(request, username):
 	except KeyError:
 		raise HTTPException(400, 'title or body missing')
 	db.create_post(username, title, body)
+	return Response(code=303, location='/admin')
+
+@authed
+def admin_post_draft(request, username, id):
+	try:
+		status = bool(int(request.body['status']))
+	except (KeyError, ValueError):
+		raise HTTPException(400, 'invalid status')
+	db.toggle_post_flag(id, db.PostFlag.draft, status)
 	return Response(code=303, location='/admin')
 
 app = PigWig(routes, template_dir=template_dir, cookie_secret=b'this is super secret')

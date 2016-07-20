@@ -8,4 +8,14 @@
 		<br>
 		<input type="submit">
 	</form>
+
+	{% for post_id, flags, username, title, body in posts %}
+		<h2><a href="/post/{{ post_id }}">{{ title }}</a></h2>
+		<form method="post" action="/admin/post/{{ post_id }}/draft">
+			<input type="hidden" name="status" value="{% if flags.draft %}0{% else %}1{% endif %}">
+			<input type="submit" value="{% if flags.draft %}publish{% else %}draft{% endif %}">
+		</form>
+		by {{ username }}
+		<blockquote>{{ body }}</blockquote>
+	{% endfor %}
 {% endblock body %}
