@@ -1,0 +1,17 @@
+{% extends 'base.jinja2' %}
+
+{% block body %}
+	{% for flags, post_id, username, title, body in posts %}
+		<h2><a href="/post/{{ post_id }}">{{ title }}</a></h2>
+		by {{ username }}
+		<blockquote>{{ body }}</blockquote>
+	{% endfor %}
+
+	<p>
+		{% if logged_in %}
+			<a href="/admin">admin</a>
+		{% else %}
+			<a href="/login">login</a>
+		{% endif %}
+	</p>
+{% endblock body %}

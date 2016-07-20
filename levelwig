@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+
+import datetime
+import functools
+import getpass
+from os import path
+
+from pigwig import PigWig, Response
+from pigwig.exceptions import HTTPException
+
+import db
+
+levelwig_dir = path.normpath(path.dirname(path.abspath(__file__)))
+template_dir = path.join(levelwig_dir, 'templates')
+
+LOGIN_TIME = datetime.timedelta(days=30)
+
+def routes():
+	return [
+		('GET', '/', root),
+		('GET', '/post/<id>', post),
+		('GET', '/login', login_form),
+		('POST', '/login', login),
+		('GET', '/admin', admin),
+		('POST', '/admin/post', admin_post),
+	]
+
+def root(request):
+	posts = db.iter_posts(allowed_flags=0)
+	logged_in = False
+	if request.get_secure_cookie('user_id', LOGIN_TIME):
+		logged_in = True
+
+	return Response.render(request, 'root.jinja2', {'posts': posts, 'logged_in': logged_in})
+
+def post(request, id):
+	raise HTTPException(404, 'invalid post id')
+	return Response.render(request, 'posts.jinja2', {'posts': [post]})
+
+def login_form(request):
+	return Response.render(request, 'login.jinja2', {})
+
+def login(request):
+	try:
+		username = request.body['username']
+		password = request.body['password']
+	except KeyError:
+		raise HTTPException(400, 'username or password missing')
+	if db.check_login(username, password):
+		response = Response(code=303, location='/admin')
+		response.set_secure_cookie(request, 'username', username, max_age=LOGIN_TIME)
+		return response
+	else:
+		raise HTTPException(401, 'incorrect username or password')
+
+def authed(f):
+	@functools.wraps(f)
+	def wrapper(request):
+		username = request.get_secure_cookie('username', LOGIN_TIME)
+		if not username:
+			return Response(code=303, location='/login')
+		return f(request, username)
+	return wrapper
+
+@authed
+def admin(request, username):
+	return Response.render(request, 'admin.jinja2', {})
+
+@authed
+def admin_post(request, username):
+	try:
+		title = request.body['title']
+		body = request.body['body']
+	except KeyError:
+		raise HTTPException(400, 'title or body missing')
+	db.create_post(username, title, body)
+	return Response(code=303, location='/admin')
+
+app = PigWig(routes, template_dir=template_dir, cookie_secret=b'this is super secret')
+
+def main():
+	if db.has_users() == 0:
+		print('time to create your blogwig user!')
+		username = input('username: ')
+		password = getpass.getpass('password: ')
+		db.create_user(username, password)
+	app.main()
+
+if __name__ == '__main__':
+	main()
