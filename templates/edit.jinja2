@@ -1,0 +1,16 @@
+{% extends 'base.jinja2' %}
+
+{% block body %}
+	editing
+	<form method="post" action="/admin/post/{{ post.id }}/edit">
+		<input type="text" name="title" value="{{ post.title }}">
+		<br>
+		<textarea name="body">{{ post.body }}</textarea>
+		<br>
+		<input type="submit">
+	</form>
+
+	<p>
+		<a href="/admin">back</a>
+	</p>
+{% endblock body %}

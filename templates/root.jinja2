@@ -1,10 +1,10 @@
 {% extends 'base.jinja2' %}
 
 {% block body %}
-	{% for post_id, flags, username, title, body in posts %}
-		<h2><a href="/post/{{ post_id }}/{{ title|slug }}">{{ title }}</a></h2>
-		by {{ username }}
-		<blockquote>{{ body }}</blockquote>
+	{% for post in posts %}
+		<h2><a href="/post/{{ post.id }}/{{ post.title|slug }}">{{ post.title }}</a></h2>
+		by {{ post.username }}
+		<blockquote>{{ post.body }}</blockquote>
 	{% endfor %}
 
 	<p>

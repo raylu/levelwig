@@ -9,14 +9,15 @@
 		<input type="submit">
 	</form>
 
-	{% for post_id, flags, username, title, body in posts %}
-		<h2><a href="/post/{{ post_id }}/{{ title|slug }}">{{ title }}</a></h2>
-		<form method="post" action="/admin/post/{{ post_id }}/draft">
-			<input type="hidden" name="status" value="{% if flags.draft %}0{% else %}1{% endif %}">
-			<input type="submit" value="{% if flags.draft %}publish{% else %}draft{% endif %}">
+	{% for post in posts %}
+		<h2><a href="/post/{{ post.id }}/{{ post.title|slug }}">{{ post.title }}</a></h2>
+		<a href="/admin/post/{{ post.id }}/edit">edit</a>
+		<form method="post" action="/admin/post/{{ post.id }}/draft">
+			<input type="hidden" name="status" value="{% if post.draft %}0{% else %}1{% endif %}">
+			<input type="submit" value="{% if post.draft %}publish{% else %}draft{% endif %}">
 		</form>
-		by {{ username }}
-		<blockquote>{{ body }}</blockquote>
+		by {{ post.username }}
+		<blockquote>{{ post.body }}</blockquote>
 	{% endfor %}
 
 	<p>

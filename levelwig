@@ -28,6 +28,8 @@ def routes():
 		('GET', '/admin/logout', logout),
 		('GET', '/admin', admin_root),
 		('POST', '/admin/post', admin_post),
+		('GET', '/admin/post/<id>/edit', admin_post_edit_form),
+		('POST', '/admin/post/<id>/edit', admin_post_edit),
 		('POST', '/admin/post/<id>/draft', admin_post_draft),
 	]
 
@@ -39,10 +41,7 @@ def post(request, id, slug=None):
 	post = db.get_post(id, allowed_flags=db.PostFlag.draft)
 	if post is None:
 		raise HTTPException(404, 'invalid post id')
-	flags, username, title, body = post
-	return Response.render(request, 'post.jinja2', {
-		'flags': flags, 'username': username, 'title': title, 'body': body,
-	})
+	return Response.render(request, 'post.jinja2', {'post': post})
 
 def login_form(request):
 	return Response.render(request, 'login.jinja2', {})
@@ -88,6 +87,21 @@ def admin_post(request, username):
 		raise HTTPException(400, 'title or body missing')
 	db.create_post(username, title, body)
 	return Response(code=303, location='/admin')
+
+@authed
+def admin_post_edit_form(request, username, id):
+	post = db.get_post(id, db.PostFlag.draft)
+	return Response.render(request, 'edit.jinja2', {'post': post})
+
+@authed
+def admin_post_edit(request, username, id):
+	try:
+		title = request.body['title']
+		body = request.body['body']
+	except KeyError:
+		raise HTTPException(400, 'title or body missing')
+	db.update_post(id, title, body)
+	return Response(code=303, location='/admin/post/%s/edit' % id)
 
 @authed
 def admin_post_draft(request, username, id):

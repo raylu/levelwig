@@ -19,10 +19,7 @@ def generate(app):
 			f.write(buf)
 
 	for post in db.iter_posts(allowed_flags=db.PostFlag.draft):
-		post_id, flags, username, title, body = post
-		stream = app.template_engine.stream('post.jinja2', {
-			'flags': flags, 'username': username, 'title': title, 'body': body,
-		})
-		with open(path.join(public_dir, '%d.html' % post_id), 'wb') as f:
+		stream = app.template_engine.stream('post.jinja2', {'post': post})
+		with open(path.join(public_dir, '%d.html' % post.id), 'wb') as f:
 			for buf in stream:
 				f.write(buf)
