@@ -1,0 +1,14 @@
+{% extends 'base.jinja2' %}
+
+{% block body %}
+	<h2>you are about to delete:</h2>
+	{{ post.title }}
+	<blockquote>{{ post.body }}</blockquote>
+	<form method="post" action="/admin/post/{{ post.id }}/delete">
+		<input type="submit" name="_" value="delete">
+	</form>
+
+	<p>
+		<a href="/admin">back</a>
+	</p>
+{% endblock body %}
