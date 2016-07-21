@@ -104,7 +104,7 @@ def slug(title):
 	r = disallowed_chars_re.sub('', title)
 	return dash_chars_re.sub('-', r)
 
-app = PigWig(routes, template_dir=template_dir, cookie_secret=b'this is super secret')
+app = PigWig(routes, template_dir=template_dir, cookie_secret=db.cookie_secret())
 app.template_engine.jinja_env.filters['slug'] = slug
 
 def main():

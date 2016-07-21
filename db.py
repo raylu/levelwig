@@ -1,5 +1,6 @@
 import atexit
 from enum import IntEnum
+import os
 from os import path
 import struct
 
@@ -67,6 +68,13 @@ def iter_posts(allowed_flags):
 				continue
 			post_id = int(post_id)
 			yield (post_id,) + parsed
+
+def cookie_secret():
+	cs = db.get(b'cookie_secret')
+	if cs is None:
+		cs = os.urandom(16)
+		db.put(b'cookie_secret', cs)
+	return cs
 
 def _pad_num(n):
 	''' 5 -> b'000005' '''
