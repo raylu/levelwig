@@ -23,20 +23,17 @@ def routes():
 		('GET', '/', root),
 		('GET', '/post/<id>', post),
 		('GET', '/post/<id>/<slug>', post),
-		('GET', '/login', login_form),
-		('POST', '/login', login),
-		('GET', '/admin', admin),
+		('GET', '/admin/login', login_form),
+		('POST', '/admin/login', login),
+		('GET', '/admin/logout', logout),
+		('GET', '/admin', admin_root),
 		('POST', '/admin/post', admin_post),
 		('POST', '/admin/post/<id>/draft', admin_post_draft),
 	]
 
 def root(request):
 	posts = db.iter_posts(allowed_flags=0)
-	logged_in = False
-	if request.get_secure_cookie('username', LOGIN_TIME):
-		logged_in = True
-
-	return Response.render(request, 'root.jinja2', {'posts': posts, 'logged_in': logged_in})
+	return Response.render(request, 'root.jinja2', {'posts': posts})
 
 def post(request, id, slug=None):
 	post = db.get_post(id, allowed_flags=db.PostFlag.draft)
@@ -63,17 +60,22 @@ def login(request):
 	else:
 		raise HTTPException(401, 'incorrect username or password')
 
+def logout(request):
+	response = Response(code=303, location='/')
+	response.set_cookie('username', '', max_age=datetime.timedelta(seconds=-1))
+	return response
+
 def authed(f):
 	@functools.wraps(f)
 	def wrapper(request, **kwargs):
 		username = request.get_secure_cookie('username', LOGIN_TIME)
 		if not username:
-			return Response(code=303, location='/login')
+			return Response(code=303, location='/admin/login')
 		return f(request, username, **kwargs)
 	return wrapper
 
 @authed
-def admin(request, username):
+def admin_root(request, username):
 	posts = db.iter_posts(allowed_flags=db.PostFlag.draft)
 	return Response.render(request, 'admin.jinja2', {'posts': posts})
 

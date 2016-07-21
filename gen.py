@@ -13,7 +13,7 @@ def generate(app):
 		pass
 
 	posts = db.iter_posts(allowed_flags=0)
-	stream = app.template_engine.stream('root.jinja2', {'posts': posts, 'logged_in': None})
+	stream = app.template_engine.stream('root.jinja2', {'posts': posts})
 	with open(path.join(public_dir, 'index.html'), 'wb') as f:
 		for buf in stream:
 			f.write(buf)
