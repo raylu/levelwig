@@ -108,15 +108,33 @@ app = PigWig(routes, template_dir=template_dir, cookie_secret=b'this is super se
 app.template_engine.jinja_env.filters['slug'] = slug
 
 def main():
-	arg = sys.argv[1]
+	try:
+		mode = sys.argv[1]
+	except IndexError:
+		print('usage %s [dev|prod|gen]' % sys.argv[0])
+		print()
+		print('\tdev: auto-reloading wsgiref server')
+		print('\tprod: eventlet wsgi server')
+		print('\tgen: generate static content into public/')
+		print()
+		print('on first run, you will be prompted to create a user and password')
+		return
+
 	if not db.has_users():
 		print('time to create your blogwig user!')
 		username = input('username: ')
 		password = getpass.getpass('password: ')
 		db.create_user(username, password)
-	if arg == 'dev':
-		app.main(port=8000)
-	elif arg == 'gen':
+
+	port = 8000
+	if len(sys.argv) == 3:
+		port = int(sys.argv[2])
+	if mode == 'dev':
+		app.main(port=port)
+	elif mode == 'prod':
+		import eventlet, eventlet.wsgi
+		eventlet.wsgi.server(eventlet.listen(('localhost', port)), app)
+	elif mode == 'gen':
 		gen.generate(app)
 
 if __name__ == '__main__':

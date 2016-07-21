@@ -4,3 +4,19 @@ Built on leveldb and pigwig
 Dev setup:
 sudo apt install libleveldb-dev
 pip3 install -r requirements.txt
+./levelwig dev 8000
+
+Prod setup:
+pip3 install eventlet
+./levelwig gen
+./levelwig prod 8000
+lighttpd config:
+	$HTTP["host"] == "levelwig" {
+		server.document-root = "/home/raylu/src/levelwig/public"
+		url.rewrite-once = (
+			"^/post/([0-9]+)" => "/$1.html"
+		)
+		$HTTP["url"] =~ "^/admin" {
+			proxy.server = ("" => (("host" => "127.0.0.1", "port" => 8000)))
+		}
+	}
