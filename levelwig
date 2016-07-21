@@ -95,7 +95,7 @@ def admin_post_draft(request, username, id):
 app = PigWig(routes, template_dir=template_dir, cookie_secret=b'this is super secret')
 
 def main():
-	if db.has_users() == 0:
+	if not db.has_users():
 		print('time to create your blogwig user!')
 		username = input('username: ')
 		password = getpass.getpass('password: ')
