@@ -2,8 +2,17 @@
 <html>
 <head>
 	<title>levelwig</title>
+	<link rel="stylesheet" href="/css/base.css">
 </head>
 <body>
-	{% block body %}{% endblock body %}
+	<header>
+		<div>
+			<h1><a href="/">Blog</a></h1>
+		</div>
+		<a href="/admin">admin</a>
+	</header>
+	<main>
+		{% block body %}{% endblock body %}
+	</main>
 </body>
 </html>

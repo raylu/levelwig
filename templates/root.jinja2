@@ -2,12 +2,10 @@
 
 {% block body %}
 	{% for post in posts %}
-		<h2><a href="/post/{{ post.id }}/{{ post.title|slug }}">{{ post.title }}</a></h2>
-		by {{ post.username }}
-		<blockquote>{{ post.body }}</blockquote>
+		<article>
+			<h2><a href="/post/{{ post.id }}/{{ post.title|slug }}">{{ post.title }}</a></h2>
+			by {{ post.username }}
+			<blockquote>{{ post.body }}</blockquote>
+		</article>
 	{% endfor %}
-
-	<p>
-		<a href="/admin">admin</a>
-	</p>
 {% endblock body %}

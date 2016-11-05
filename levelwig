@@ -7,6 +7,7 @@ from os import path
 import re
 import sys
 
+import cleancss
 from pigwig import PigWig, Response
 from pigwig.exceptions import HTTPException
 
@@ -15,6 +16,7 @@ import gen
 
 levelwig_dir = path.normpath(path.dirname(path.abspath(__file__)))
 template_dir = path.join(levelwig_dir, 'templates')
+css_dir = path.join(levelwig_dir, 'css')
 
 LOGIN_TIME = datetime.timedelta(days=30)
 
@@ -23,6 +25,7 @@ def routes():
 		('GET', '/', root),
 		('GET', '/post/<id>', post),
 		('GET', '/post/<id>/<slug>', post),
+		('GET', '/css/<path:relpath>', css),
 		('GET', '/admin/login', login_form),
 		('POST', '/admin/login', login),
 		('GET', '/admin/logout', logout),
@@ -44,6 +47,12 @@ def post(request, id, slug=None):
 	if post is None:
 		raise HTTPException(404, 'invalid post id')
 	return Response.render(request, 'post.jinja2', {'post': post})
+
+def css(request, relpath):
+	root, _ = path.splitext(relpath)
+	ccss_path = path.join(css_dir, root) + '.ccss'
+	with open(ccss_path, 'r') as f:
+		return Response(cleancss.convert(f), content_type='text/css')
 
 def login_form(request):
 	return Response.render(request, 'login.jinja2', {})
