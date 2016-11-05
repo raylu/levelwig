@@ -1,4 +1,5 @@
 import atexit
+import datetime
 from enum import IntEnum
 import os
 from os import path
@@ -33,7 +34,8 @@ def check_login(username, password):
 
 def create_post(username, title, body):
 	post_count = int(posts_db.get(b'count', 0))
-	post = Post(post_count + 1, PostFlag.draft, username, title, body)
+	date = datetime.date.today().isoformat()
+	post = Post(post_count + 1, PostFlag.draft, username, date, title, body)
 	with posts_db.write_batch() as batch:
 		post_id = post.save(batch)
 		batch.put(b'count', post_id)
@@ -88,24 +90,26 @@ def _parse_post(post_id, post, allowed_flags):
 	flags = struct.unpack('I', post[:4])[0]
 	if flags & allowed_flags != flags:
 		return None
-	username, title, body = post[4:].split(b'\0')
+	username, date, title, body = post[4:].split(b'\0')
 	username = username.decode('utf-8')
+	date = date.decode('ascii')
 	title = title.decode('utf-8')
 	body = body.decode('utf-8')
-	return Post(post_id, flags, username, title, body)
+	return Post(post_id, flags, username, date, title, body)
 
 class PostFlag(IntEnum):
 	deleted = 0x00000001
 	draft = 0x00000002
 
 class Post:
-	def __init__(self, post_id, flags, username, title, body):
+	def __init__(self, post_id, flags, username, date, title, body):
 		self.id = int(post_id)
 		for name, bit in PostFlag.__members__.items():
 			value = flags & bit == bit
 			setattr(self, name, value)
 		self.username = username
 		self.title = title
+		self.date = date
 		self.body = body
 
 	def save(self, batch=None):
@@ -116,6 +120,7 @@ class Post:
 				flags |= bit
 		post_data = struct.pack('I', flags)
 		post_data += self.username.encode('utf-8') + b'\0'
+		post_data += self.date.encode('ascii') + b'\0'
 		post_data += self.title.encode('utf-8') + b'\0'
 		post_data += self.body.encode('utf-8')
 		writer = batch

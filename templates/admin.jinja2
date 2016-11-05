@@ -18,7 +18,7 @@
 				<input type="hidden" name="status" value="{% if post.draft %}0{% else %}1{% endif %}">
 				<input type="submit" value="{% if post.draft %}publish{% else %}draft{% endif %}">
 			</form>
-			by {{ post.username }}
+			on {{ post.date }} by {{ post.username }}
 			<blockquote>{{ post.body }}</blockquote>
 		</article>
 	{% endfor %}
