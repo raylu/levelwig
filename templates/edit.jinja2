@@ -2,10 +2,5 @@
 {% import 'macros.jinja2' as macros %}
 
 {% block body %}
-	editing
-	{{ macros.editor("/admin/post/{{ post.id }}/edit", post.title, post.body) }}
-
-	<p>
-		<a href="/admin">back</a>
-	</p>
+	{{ macros.editor("/admin/post/{{ post.id }}/edit", "fullpage", post.title, post.body, "save") }}
 {% endblock body %}

@@ -2,7 +2,7 @@
 {% import 'macros.jinja2' as macros %}
 
 {% block body %}
-	{{ macros.editor("/admin/post", "", "") }}
+	{{ macros.editor("/admin/post", "", "", "", "save as draft") }}
 
 	{% for post in posts %}
 		{{ macros.render_post(post, True, False) }}
