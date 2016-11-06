@@ -65,7 +65,7 @@ def get_post(post_id, allowed_flags):
 
 def iter_posts(allowed_flags):
 	post_count = posts_db.get(b'count', b'000000')
-	with posts_db.iterator(stop=post_count, include_stop=True) as it:
+	with posts_db.iterator(reverse=True, start=b'000000', stop=post_count, include_stop=True) as it:
 		for post_id, post in it:
 			parsed = _parse_post(post_id, post, allowed_flags)
 			if parsed is None:
