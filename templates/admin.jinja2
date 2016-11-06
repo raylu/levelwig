@@ -19,7 +19,7 @@
 				<input type="submit" value="{% if post.draft %}publish{% else %}draft{% endif %}">
 			</form>
 			on {{ post.date }} by {{ post.username }}
-			<blockquote>{{ post.body|markdown }}</blockquote>
+			<blockquote>{{ post.first_paragraph()|markdown }}</blockquote>
 		</article>
 	{% endfor %}
 

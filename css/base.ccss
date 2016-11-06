@@ -56,3 +56,5 @@ article:
 	blockquote:
 		margin-top: 1em
 		font-family: serif
+		font-size: 1.4em
+		line-height: 1.5em

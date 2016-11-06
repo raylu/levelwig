@@ -129,6 +129,13 @@ class Post:
 		writer.put(post_id, post_data)
 		return post_id
 
+	def first_paragraph(self):
+		end = self.body.find('\n\n')
+		if end == -1:
+			return self.body
+		else:
+			return self.body[:end] + '\n\n&hellip;'
+
 def close():
 	db.close()
 atexit.register(close)
