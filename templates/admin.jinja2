@@ -1,26 +1,11 @@
 {% extends 'base.jinja2' %}
+{% import 'macros.jinja2' as macros %}
 
 {% block body %}
-	<form method="post" action="/admin/post">
-		<input type="text" name="title" placeholder="title">
-		<br>
-		<textarea name="body"></textarea>
-		<br>
-		<input type="submit">
-	</form>
+	{{ macros.editor("/admin/post", "", "") }}
 
 	{% for post in posts %}
-		<article>
-			<h2><a href="/post/{{ post.id }}/{{ post.title|slug }}">{{ post.title }}</a></h2>
-			<a href="/admin/post/{{ post.id }}/edit">edit</a>
-			<a href="/admin/post/{{ post.id }}/delete">delete</a>
-			<form method="post" action="/admin/post/{{ post.id }}/draft">
-				<input type="hidden" name="status" value="{% if post.draft %}0{% else %}1{% endif %}">
-				<input type="submit" value="{% if post.draft %}publish{% else %}draft{% endif %}">
-			</form>
-			on {{ post.date }} by {{ post.username }}
-			<blockquote>{{ post.first_paragraph()|markdown }}</blockquote>
-		</article>
+		{{ macros.render_post(post, True, False) }}
 	{% endfor %}
 
 	<p>

@@ -1,11 +1,8 @@
 {% extends 'base.jinja2' %}
+{% import 'macros.jinja2' as macros %}
 
 {% block body %}
 	{% for post in posts %}
-		<article>
-			<h2><a href="/post/{{ post.id }}/{{ post.title|slug }}">{{ post.title }}</a></h2>
-			on {{ post.date }} by {{ post.username }}
-			<blockquote>{{ post.first_paragraph()|markdown }}</blockquote>
-		</article>
+		{{ macros.render_post(post, False, False) }}
 	{% endfor %}
 {% endblock body %}

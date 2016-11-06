@@ -1,14 +1,9 @@
 {% extends 'base.jinja2' %}
+{% import 'macros.jinja2' as macros %}
 
 {% block body %}
 	editing
-	<form method="post" action="/admin/post/{{ post.id }}/edit">
-		<input type="text" name="title" value="{{ post.title }}">
-		<br>
-		<textarea name="body">{{ post.body }}</textarea>
-		<br>
-		<input type="submit">
-	</form>
+	{{ macros.editor("/admin/post/{{ post.id }}/edit", post.title, post.body) }}
 
 	<p>
 		<a href="/admin">back</a>

@@ -1,0 +1,31 @@
+{% macro render_post(post, admin, full) -%}
+	<article>
+		<h2><a href="/post/{{ post.id }}/{{ post.title|slug }}">{{ post.title }}</a></h2>
+		{% if admin %}
+			<a href="/admin/post/{{ post.id }}/edit">edit</a>
+			<a href="/admin/post/{{ post.id }}/delete">delete</a>
+			<form method="post" action="/admin/post/{{ post.id }}/draft">
+				<input type="hidden" name="status" value="{% if post.draft %}0{% else %}1{% endif %}">
+				<input type="submit" value="{% if post.draft %}publish{% else %}draft{% endif %}">
+			</form>
+		{% endif %}
+		on {{ post.date }} by {{ post.username }}
+		<blockquote>
+			{% if full %}
+				{{ post.body|markdown }}
+			{% else %}
+				{{ post.first_paragraph()|markdown }}
+			{% endif %}
+		</blockquote>
+	</article>
+{%- endmacro %}
+
+{% macro editor(action, title, body) -%}
+	<form method="post" action="{{ action }}">
+		<input type="text" name="title" value="{{ title }}" placeholder="title">
+		<br>
+		<textarea name="body">{{ body }}</textarea>
+		<br>
+		<input type="submit">
+	</form>
+{%- endmacro %}
