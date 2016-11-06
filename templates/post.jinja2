@@ -1,9 +1,11 @@
 {% extends 'base.jinja2' %}
 
 {% block body %}
-	<h2>{{ post.title }}</h2>
-	by {{ post.username }}
-	<blockquote>{{ post.body }}</blockquote>
+	<article>
+		<h2>{{ post.title }}</h2>
+		on {{ post.date }} by {{ post.username }}
+		<blockquote>{{ post.body|markdown }}</blockquote>
+	</article>
 
 	<p>
 		<a href="/">back</a>

@@ -1,4 +1,5 @@
 jinja2
+misaka # markdown
 passlib
-pigwig
-plyvel
+pigwig # web framework
+plyvel # database

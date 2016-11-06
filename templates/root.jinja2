@@ -5,7 +5,7 @@
 		<article>
 			<h2><a href="/post/{{ post.id }}/{{ post.title|slug }}">{{ post.title }}</a></h2>
 			on {{ post.date }} by {{ post.username }}
-			<blockquote>{{ post.body }}</blockquote>
+			<blockquote>{{ post.body|markdown }}</blockquote>
 		</article>
 	{% endfor %}
 {% endblock body %}
