@@ -37,6 +37,7 @@ def routes():
 		('POST', '/admin/post/<id>/draft', admin_post_draft),
 		('GET', '/admin/post/<id>/delete', admin_post_delete_form),
 		('POST', '/admin/post/<id>/delete', admin_post_delete),
+		('GET', '/admin/generate', admin_generate),
 	]
 
 def root(request):
@@ -132,6 +133,11 @@ def admin_post_draft(request, username, id):
 	except (KeyError, ValueError):
 		raise HTTPException(400, 'invalid status')
 	db.toggle_post_flag(id, db.PostFlag.draft, status)
+	return Response(code=303, location='/admin')
+
+@authed
+def admin_generate(request, username):
+	gen.generate(app)
 	return Response(code=303, location='/admin')
 
 disallowed_chars_re = re.compile('[^\w\s-]')
