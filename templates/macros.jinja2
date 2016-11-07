@@ -1,5 +1,5 @@
 {% macro render_post(post, admin, full) -%}
-	<article>
+	<article{% if post.draft %} class="draft"{% endif %}>
 		{% if admin %}
 			<div class="admin">
 				<a href="/admin/post/{{ post.id }}/edit">edit</a>

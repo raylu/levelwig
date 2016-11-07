@@ -1,3 +1,7 @@
+article.draft:
+	blockquote:
+		color: #777
+
 article div.admin:
 	float: right
 	text-align: right
