@@ -22,8 +22,8 @@
 	</article>
 {%- endmacro %}
 
-{% macro editor(action, class, title, body, submit) -%}
-	<article class="{{ class }}">
+{% macro editor(action, title, body, submit) -%}
+	<article class="fullpage">
 		<form method="post" action="{{ action }}" class="editor">
 			<input type="text" name="title" value="{{ title }}" placeholder="title">
 			<br>

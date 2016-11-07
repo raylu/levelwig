@@ -31,6 +31,7 @@ def routes():
 		('POST', '/admin/login', login),
 		('GET', '/admin/logout', logout),
 		('GET', '/admin', admin_root),
+		('GET', '/admin/post', admin_post_form),
 		('POST', '/admin/post', admin_post),
 		('GET', '/admin/post/<id>/edit', admin_post_edit_form),
 		('POST', '/admin/post/<id>/edit', admin_post_edit),
@@ -93,6 +94,10 @@ def authed(f):
 def admin_root(request, username):
 	posts = db.iter_posts(allowed_flags=db.PostFlag.draft)
 	return Response.render(request, 'admin.jinja2', {'posts': posts})
+
+@authed
+def admin_post_form(request, username):
+	return Response.render(request, 'new_post.jinja2', {})
 
 @authed
 def admin_post(request, username):

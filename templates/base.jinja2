@@ -6,12 +6,14 @@
 	{% block head %}{% endblock head %}
 </head>
 <body>
-	<header>
-		<div>
-			<h1><a href="/">Blog</a></h1>
-		</div>
-		<a href="/admin">admin</a>
-	</header>
+	{% block nav %}
+		<header>
+			<div>
+				<h1><a href="/">Blog</a></h1>
+			</div>
+			<a href="/admin">admin</a>
+		</header>
+	{% endblock nav %}
 	<main>
 		{% block body %}{% endblock body %}
 	</main>

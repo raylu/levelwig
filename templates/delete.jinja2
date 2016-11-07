@@ -1,14 +1,15 @@
-{% extends 'base.jinja2' %}
+{% extends 'base_admin.jinja2' %}
 {% import 'macros.jinja2' as macros %}
 
 {% block body %}
-	<h2>you are about to delete:</h2>
-	{{ macros.render_post(post, False, True) }}
-	<form method="post" action="/admin/post/{{ post.id }}/delete">
-		<input type="submit" name="_" value="delete">
-	</form>
+	<article>
+		<div class="admin">
+			<form method="post" action="/admin/post/{{ post.id }}/delete">
+				<input type="submit" name="_" value="delete">
+			</form>
+		</div>
+			<a href="/admin">back</a>
+	</article>
 
-	<p>
-		<a href="/admin">back</a>
-	</p>
+	{{ macros.render_post(post, False, True) }}
 {% endblock body %}
