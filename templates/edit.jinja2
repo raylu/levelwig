@@ -2,5 +2,5 @@
 {% import 'macros.jinja2' as macros %}
 
 {% block body %}
-	{{ macros.editor("/admin/post/{{ post.id }}/edit", "fullpage", post.title, post.body, "save") }}
+	{{ macros.editor("/admin/post/%d/edit" % post.id, "fullpage", post.title, post.body, "save") }}
 {% endblock body %}
