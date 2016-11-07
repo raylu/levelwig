@@ -1,0 +1,3 @@
+article div.admin:
+	float: right
+	text-align: right

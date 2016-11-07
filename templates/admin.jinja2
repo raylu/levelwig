@@ -1,6 +1,10 @@
 {% extends 'base.jinja2' %}
 {% import 'macros.jinja2' as macros %}
 
+{% block head %}
+	<link rel="stylesheet" href="/css/admin.css">
+{% endblock head %}
+
 {% block body %}
 	{{ macros.editor("/admin/post", "", "", "", "save as draft") }}
 

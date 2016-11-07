@@ -1,14 +1,16 @@
 {% macro render_post(post, admin, full) -%}
 	<article>
-		<h2><a href="/post/{{ post.id }}/{{ post.title|slug }}">{{ post.title }}</a></h2>
 		{% if admin %}
-			<a href="/admin/post/{{ post.id }}/edit">edit</a>
-			<a href="/admin/post/{{ post.id }}/delete">delete</a>
-			<form method="post" action="/admin/post/{{ post.id }}/draft">
-				<input type="hidden" name="status" value="{% if post.draft %}0{% else %}1{% endif %}">
-				<input type="submit" value="{% if post.draft %}publish{% else %}draft{% endif %}">
-			</form>
+			<div class="admin">
+				<a href="/admin/post/{{ post.id }}/edit">edit</a>
+				<a href="/admin/post/{{ post.id }}/delete">delete</a>
+				<form method="post" action="/admin/post/{{ post.id }}/draft">
+					<input type="hidden" name="status" value="{% if post.draft %}0{% else %}1{% endif %}">
+					<input type="submit" value="{% if post.draft %}publish{% else %}draft{% endif %}">
+				</form>
+			</div>
 		{% endif %}
+		<h2><a href="/post/{{ post.id }}/{{ post.title|slug }}">{{ post.title }}</a></h2>
 		on {{ post.date }} by {{ post.username }}
 		<blockquote>
 			{% if full %}

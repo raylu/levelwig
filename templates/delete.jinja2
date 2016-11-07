@@ -1,9 +1,9 @@
 {% extends 'base.jinja2' %}
+{% import 'macros.jinja2' as macros %}
 
 {% block body %}
 	<h2>you are about to delete:</h2>
-	{{ post.title }}
-	<blockquote>{{ post.body }}</blockquote>
+	{{ macros.render_post(post, False, True) }}
 	<form method="post" action="/admin/post/{{ post.id }}/delete">
 		<input type="submit" name="_" value="delete">
 	</form>
