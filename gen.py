@@ -1,5 +1,6 @@
 import os
 from os import path
+import shutil
 
 import db
 
@@ -8,9 +9,11 @@ public_dir = path.join(levelwig_dir, 'public')
 
 def generate(app):
 	try:
-		os.mkdir(public_dir)
-	except FileExistsError:
-		pass
+		shutil.rmtree(public_dir)
+	except FileNotFoundError as e:
+		if e.filename != public_dir:
+			raise
+	os.mkdir(public_dir)
 
 	posts = db.iter_posts(allowed_flags=0)
 	stream = app.template_engine.stream('root.jinja2', {'posts': posts})
