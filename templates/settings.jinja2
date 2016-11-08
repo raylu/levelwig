@@ -1,0 +1,12 @@
+{% extends 'base_admin.jinja2' %}
+{% import 'macros.jinja2' as macros %}
+
+{% block body %}
+	<form method="post" action="/admin/settings">
+		{% for key, val in settings %}
+			{{ key }}: <input type="text" name="{{ key }}" value="{{ val|escape }}">
+			<br>
+		{% endfor %}
+		<input type="submit">
+	</form>
+{% endblock body %}

@@ -6,12 +6,13 @@
 
 {% block nav %}
 	<header class="admin">
-			<h1><a href="/">Blog</a></h1>
+		<h1><a href="/">{{ title }}</a></h1>
 		<div>
-		<a href="/admin">admin</a>
-		<a href="/admin/post">new post</a>
-		<a href="/admin/generate">generate static version</a>
-		<a href="/admin/logout">logout</a>
+			<a href="/admin">admin</a>
+			<a href="/admin/post">new post</a>
+			<a href="/admin/settings">settings</a>
+			<a href="/admin/generate">generate static version</a>
+			<a href="/admin/logout">logout</a>
 		</div>
 	</header>
 {% endblock nav %}

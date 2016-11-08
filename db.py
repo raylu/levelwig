@@ -13,6 +13,7 @@ db_path = path.join(levelwig_dir, 'database')
 db = plyvel.DB(db_path, create_if_missing=True)
 users_db = db.prefixed_db(b'user-')
 posts_db = db.prefixed_db(b'post-')
+settings_db = db.prefixed_db(b'setting-')
 
 def has_users():
 	with users_db.iterator() as it:
@@ -71,6 +72,19 @@ def iter_posts(allowed_flags):
 			if parsed is None:
 				continue
 			yield parsed
+
+def default_setting(key, val):
+	encoded = key.encode('ascii')
+	if settings_db.get(encoded) is None:
+		settings_db.put(encoded, val.encode('utf-8'))
+
+def update_setting(key, val):
+	settings_db.put(key.encode('ascii'), val.encode('utf-8'))
+
+def iter_settings():
+	it = settings_db.iterator()
+	for key, val in it:
+		yield key.decode('ascii'), val.decode('utf-8')
 
 def cookie_secret():
 	cs = db.get(b'cookie_secret')
