@@ -5,3 +5,8 @@ article.draft:
 article div.admin:
 	float: right
 	text-align: right
+
+@media (max-width: 900px):
+	header div:
+		flex-direction: row
+		justify-content: space-around

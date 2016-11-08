@@ -77,3 +77,24 @@ form.editor:
 		flex-grow: 1
 		width: 100%
 		min-height: 15em
+
+@media (max-width: 900px):
+	body:
+		font-size: 10px
+
+	header:
+		position: relative
+		height: 4em
+		width: 100%
+		flex-flow: row nowrap
+
+		& > a:
+			display: none
+
+	main:
+		padding: 0
+
+	article:
+		width: 100%
+		padding: 2em
+		margin: 1em auto
