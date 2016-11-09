@@ -1,10 +1,27 @@
-article.draft:
-	blockquote:
+article:
+	&.draft > blockquote:
 		color: #777
 
-article div.admin:
-	float: right
-	text-align: right
+	&.fullpage:
+		height: 90% // for form.editor
+
+	div.admin:
+		float: right
+		text-align: right
+
+form.editor:
+	height: 100% // for textarea
+	display: flex
+	flex-direction: column
+
+	textarea:
+		flex-grow: 1
+		width: 100%
+		min-height: 15em
+
+	input.date:
+		display: inline
+		width: 10em
 
 form.delete_user:
 	display: inline

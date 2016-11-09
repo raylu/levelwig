@@ -29,9 +29,6 @@ input, button, textarea:
 	background-color: #222
 	color: inherit
 
-.clear:
-	clear: both
-
 header:
 	position: fixed
 	width: 17em
@@ -62,9 +59,6 @@ article:
 	padding: 3em
 	background-color: #111
 
-	&.fullpage:
-		height: 90% // for form.editor
-
 	& > blockquote: // post body
 		margin-top: 1em
 		font-family: serif
@@ -82,16 +76,6 @@ article:
 			padding: 0.25em 0.5em
 			border-left: 0.2em solid #974
 			background-color: #222
-
-form.editor:
-	height: 100% // for textarea
-	display: flex
-	flex-direction: column
-
-	textarea:
-		flex-grow: 1
-		width: 100%
-		min-height: 15em
 
 @media (max-width: 900px):
 	body:
