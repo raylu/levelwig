@@ -211,9 +211,9 @@ def slugify(title):
 	return dash_chars_re.sub('-', r)
 
 misaka_renderer = misaka.HtmlRenderer()
-markdown = misaka.Markdown(misaka_renderer)
-def render_markdown(text):
-	return markdown(text)
+md = misaka.Markdown(misaka_renderer, misaka.EXT_AUTOLINK | misaka.EXT_FENCED_CODE |
+		misaka.EXT_STRIKETHROUGH | misaka.EXT_SUPERSCRIPT | misaka.EXT_FOOTNOTES |
+		misaka.EXT_NO_INTRA_EMPHASIS)
 
 def init_settings():
 	db.default_setting('title', 'blog')
@@ -223,7 +223,7 @@ def init_settings():
 app = PigWig(routes, template_dir=template_dir, cookie_secret=db.cookie_secret())
 jinja_env = app.template_engine.jinja_env
 jinja_env.filters['slug'] = slugify
-jinja_env.filters['markdown'] = render_markdown
+jinja_env.filters['markdown'] = md
 init_settings()
 
 def main():
