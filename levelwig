@@ -33,6 +33,10 @@ def routes():
 		('GET', '/admin', admin_root),
 		('GET', '/admin/settings', admin_settings_form),
 		('POST', '/admin/settings', admin_settings),
+		('GET', '/admin/users', admin_users_form),
+		('POST', '/admin/users', admin_user_create),
+		('POST', '/admin/users/password', admin_user_password),
+		('POST', '/admin/users/<del_username>/delete', admin_user_delete),
 		('GET', '/admin/post', admin_post_form),
 		('POST', '/admin/post', admin_post),
 		('GET', '/admin/post/<id>/edit', admin_post_edit_form),
@@ -112,6 +116,40 @@ def admin_settings(request, username):
 			db.update_setting(key, new_val)
 			app.template_engine.jinja_env.globals[key] = new_val
 	return Response(code=303, location='/admin')
+
+@authed
+def admin_users_form(request, username):
+	return Response.render(request, 'users.jinja2', {'users': db.iter_users()})
+
+@authed
+def admin_user_create(request, username):
+	try:
+		new_username = request.body['username']
+		password = request.body['password']
+	except KeyError:
+		raise HTTPException(400, 'username or password missing')
+	db.create_user(new_username, password)
+	return Response(code=303, location='/admin/users')
+
+@authed
+def admin_user_password(request, username):
+	try:
+		old_password = request.body['old_password']
+		new_password1 = request.body['new_password1']
+		new_password2 = request.body['new_password2']
+	except KeyError:
+		raise HTTPException(400, 'old_password, new_password1, or new_password2 missing')
+	if new_password1 != new_password2:
+		raise HTTPException(400, 'new passwords did not match')
+	result = db.change_password(username, old_password, new_password1)
+	if not result:
+		raise HTTPException(400, 'old password was incorrect')
+	return Response(code=303, location='/admin/users')
+
+@authed
+def admin_user_delete(request, username, del_username):
+	db.delete_user(del_username)
+	return Response(code=303, location='/admin/users')
 
 @authed
 def admin_post_form(request, username):

@@ -1,0 +1,27 @@
+{% extends 'base_admin.jinja2' %}
+{% import 'macros.jinja2' as macros %}
+
+{% block body %}
+	{% for username in users %}
+		{{ username }}
+		<form method="post" action="/admin/users/{{ username|urlencode }}/delete" class="delete_user">
+			<input type="submit" name="_" value="&#x274C;">
+		</form>
+		<br>
+	{% endfor %}
+
+	<p>new user:</p>
+	<form method="post" action="/admin/users">
+		<input type="text" name="username" placeholder="username">
+		<input type="password" name="password" placeholder="password">
+		<input type="submit" value="create">
+	</form>
+
+	<p>change password:</p>
+	<form method="post" action="/admin/users/password">
+		<input type="password" name="old_password" placeholder="old password">
+		<input type="password" name="new_password1" placeholder="new password">
+		<input type="password" name="new_password2" placeholder="new password again">
+		<input type="submit" value="change">
+	</form>
+{% endblock body %}

@@ -24,14 +24,32 @@ def has_users():
 		return True
 
 def create_user(username, password):
+	encoded = username.encode('utf-8')
+	if users_db.get(encoded) is not None:
+		raise Exception('user already exists')
 	hashed = custom_app_context.encrypt(password)
-	users_db.put(username.encode('utf-8'), hashed.encode())
+	users_db.put(encoded, hashed.encode())
+
+def delete_user(username):
+	users_db.delete(username.encode('utf-8'))
 
 def check_login(username, password):
 	hashed = users_db.get(username.encode('utf-8'))
 	if hashed is None:
 		return False
 	return custom_app_context.verify(password, hashed)
+
+def change_password(username, old_password, new_password):
+	if not check_login(username, old_password):
+		return False
+	hashed = custom_app_context.encrypt(new_password)
+	users_db.put(username.encode('utf-8'), hashed.encode())
+	return True
+
+def iter_users():
+	with users_db.iterator(include_value=False) as it:
+		for username in it:
+			yield username.decode('utf-8')
 
 def create_post(username, title, body):
 	post_count = int(posts_db.get(b'count', 0))
