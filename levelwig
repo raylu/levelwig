@@ -174,11 +174,12 @@ def admin_post_edit_form(request, username, id):
 def admin_post_edit(request, username, id):
 	try:
 		title = request.body['title']
-		body = request.body['body'].replace('\r\n', '\n')
 		date = request.body['date']
+		author = request.body['author']
+		body = request.body['body'].replace('\r\n', '\n')
 	except KeyError:
 		raise HTTPException(400, 'title, body, or date missing')
-	db.update_post(id, title, body, date)
+	db.update_post(id, title, date, author, body)
 	return Response(code=303, location='/admin/post/%s/edit' % id)
 
 @authed

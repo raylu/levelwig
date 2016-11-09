@@ -19,10 +19,6 @@ form.editor:
 		width: 100%
 		min-height: 15em
 
-	input.date:
-		display: inline
-		width: 10em
-
 form.delete_user:
 	display: inline
 

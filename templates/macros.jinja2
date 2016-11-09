@@ -22,13 +22,16 @@
 	</article>
 {%- endmacro %}
 
-{% macro editor(action, title, date, body, submit) -%}
+{% macro editor(action, title, date, author, body, submit) -%}
 	<article class="fullpage">
 		<form method="post" action="{{ action }}" class="editor">
 			<input type="text" name="title" value="{{ title|escape }}" placeholder="title">
 			{% if date %}
-				<br>
-				on <input type="text" name="date" value="{{ date }}" class="date">
+				<div>
+					<br>
+					on <input type="text" name="date" value="{{ date }}">
+					by <input type="text" name="author" value="{{ author }}">
+				</div>
 			{% endif %}
 			<br>
 			<textarea name="body">{{ body|escape }}</textarea>

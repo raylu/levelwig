@@ -59,11 +59,12 @@ def create_post(username, title, body):
 		post_id = post.save(batch)
 		batch.put(b'count', post_id)
 
-def update_post(post_id, title, body, date):
+def update_post(post_id, title, date, username, body):
 	post_id = _pad_num(post_id)
 	post = _parse_post(post_id, posts_db.get(post_id), PostFlag.draft)
 	post.title = title
 	post.date = date
+	post.username = username
 	post.body = body
 	post.save()
 
