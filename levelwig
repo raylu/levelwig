@@ -209,7 +209,8 @@ def admin_generate(request, username):
 disallowed_chars_re = re.compile(r'[^\w\s-]')
 dash_chars_re = re.compile(r'[-\s]+')
 def slugify(title):
-	r = disallowed_chars_re.sub('', title)
+	r = title.casefold()
+	r = disallowed_chars_re.sub('', r)
 	return dash_chars_re.sub('-', r)
 
 misaka_renderer = misaka.HtmlRenderer()
