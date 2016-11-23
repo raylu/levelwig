@@ -19,7 +19,7 @@ def generate(app):
 	# do this instead of shutil.rmtree in case public is a symlink
 	for filename in os.listdir(public_dir):
 		abspath = path.join(public_dir, filename)
-		if path.isdir(abspath):
+		if path.isdir(abspath) and not path.islink(abspath):
 			shutil.rmtree(abspath)
 		else:
 			os.unlink(abspath)
