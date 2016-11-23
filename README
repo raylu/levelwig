@@ -19,7 +19,7 @@ nginx config:
 		listen [::]:80;
 		add_header X-Frame-Options DENY;
 		add_header X-Content-Type-Options nosniff;
-		add_header Content-Security-Policy "default-src none; style-src 'self'; img-src https:";
+		add_header Content-Security-Policy "default-src none; style-src 'self'; img-src https: 'self'";
 		add_header X-Xss-Protection "1; mode=block";
 		index index.html;
 		location / {

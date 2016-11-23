@@ -24,6 +24,8 @@ def generate(app):
 		else:
 			os.unlink(abspath)
 
+	os.symlink(path.join(levelwig_dir, 'media'), path.join(public_dir, 'media'))
+
 	posts = db.iter_posts(allowed_flags=0)
 	stream = app.template_engine.stream('root.jinja2', {'posts': posts})
 	with open(path.join(public_dir, 'index.html'), 'wb') as f:

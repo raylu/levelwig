@@ -1,0 +1,19 @@
+{% extends 'base_admin.jinja2' %}
+{% import 'macros.jinja2' as macros %}
+
+{% block body %}
+	<article>
+		<form method="post" action="/admin/media/upload" enctype="multipart/form-data">
+			<input type="file" name="file">
+			<input type="submit">
+		</form>
+
+		{% for filename in files %}
+			<br><a href="/media/{{ filename|escape }}">{{ filename }}</a>
+			<form method="post" action="/admin/media/delete" class="delete">
+				<input type="hidden" name="file" value="{{ filename|escape }}">
+				<input type="submit" name="_" value="&#x274C;">
+			</form>
+		{% endfor %}
+	</article>
+{% endblock body %}

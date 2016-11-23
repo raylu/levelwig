@@ -3,6 +3,8 @@
 import datetime
 import functools
 import getpass
+import mimetypes
+import os
 from os import path
 import re
 import sys
@@ -18,6 +20,7 @@ import gen
 levelwig_dir = path.normpath(path.dirname(path.abspath(__file__)))
 template_dir = path.join(levelwig_dir, 'templates')
 css_dir = path.join(levelwig_dir, 'css')
+media_dir = path.join(levelwig_dir, 'media')
 
 LOGIN_TIME = datetime.timedelta(days=30)
 
@@ -26,6 +29,7 @@ def routes():
 		('GET', '/', root),
 		('GET', '/post/<id>', get_post),
 		('GET', '/post/<id>/<slug>', get_post),
+		('GET', '/media/<path:relpath>', media),
 		('GET', '/css/<path:relpath>', css),
 		('GET', '/feed.atom', get_feed),
 		('GET', '/admin/login', login_form),
@@ -45,6 +49,9 @@ def routes():
 		('POST', '/admin/post/<id>/draft', admin_post_draft),
 		('GET', '/admin/post/<id>/delete', admin_post_delete_form),
 		('POST', '/admin/post/<id>/delete', admin_post_delete),
+		('GET', '/admin/media', admin_media),
+		('POST', '/admin/media/upload', admin_media_upload),
+		('POST', '/admin/media/delete', admin_media_delete),
 		('GET', '/admin/generate', admin_generate),
 	]
 
@@ -57,6 +64,16 @@ def get_post(request, id, slug=None):
 	if post is None:
 		raise HTTPException(404, 'invalid post id')
 	return Response.render(request, 'post.jinja2', {'post': post})
+
+def media(request, relpath):
+	def gen_file():
+		with open(path.join(media_dir, relpath), 'rb') as f:
+			while True:
+				buf = f.read(4096)
+				if not buf:
+					break
+				yield buf
+	return Response(gen_file(), content_type=mimetypes.guess_type(relpath)[0])
 
 def css(request, relpath):
 	name, _ = path.splitext(relpath)
@@ -209,6 +226,34 @@ def admin_post_draft(request, username, id):
 	return Response(code=303, location='/admin')
 
 @authed
+def admin_media(request, username):
+	files = os.listdir(media_dir)
+	return Response.render(request, 'media.jinja2', {'files': files})
+
+@authed
+def admin_media_upload(request, username):
+	uploaded = request.body['file']
+	base, ext = path.splitext(uploaded.filename)
+	sanitized_name = slugify(base) + ext
+	filepath = path.join(media_dir, sanitized_name)
+	if path.exists(filepath):
+		raise HTTPException(400, 'file already exists')
+
+	with uploaded, open(filepath, 'wb') as f:
+		while True:
+			buf = uploaded.file.read(4096)
+			if not buf:
+				break
+			f.write(buf)
+	return Response(code=303, location='/admin/media')
+
+@authed
+def admin_media_delete(request, username):
+	filename = request.body['file']
+	os.unlink(path.join(media_dir, filename))
+	return Response(code=303, location='/admin/media')
+
+@authed
 def admin_generate(request, username):
 	gen.generate(app)
 	return Response(code=303, location='/admin')
@@ -236,6 +281,8 @@ jinja_env = app.template_engine.jinja_env
 jinja_env.filters['slug'] = slugify
 jinja_env.filters['markdown'] = md
 init_settings()
+if not os.path.exists(media_dir):
+	os.mkdir(media_dir)
 
 def main():
 	try:

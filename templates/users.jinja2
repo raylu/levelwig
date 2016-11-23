@@ -4,7 +4,7 @@
 {% block body %}
 	{% for username in users %}
 		{{ username }}
-		<form method="post" action="/admin/users/{{ username|urlencode }}/delete" class="delete_user">
+		<form method="post" action="/admin/users/{{ username|urlencode }}/delete" class="delete">
 			<input type="submit" name="_" value="&#x274C;">
 		</form>
 		<br>
