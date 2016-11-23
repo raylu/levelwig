@@ -239,12 +239,8 @@ def admin_media_upload(request, username):
 	if path.exists(filepath):
 		raise HTTPException(400, 'file already exists')
 
-	with uploaded, open(filepath, 'wb') as f:
-		while True:
-			buf = uploaded.file.read(4096)
-			if not buf:
-				break
-			f.write(buf)
+	with open(filepath, 'wb') as f:
+		f.write(uploaded.data)
 	return Response(code=303, location='/admin/media')
 
 @authed
