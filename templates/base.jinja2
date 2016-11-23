@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>{{ title }}</title>
+	<title>{{ title|escape }}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="theme-color" content="#222">
-	<link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.atom">
+	<link rel="alternate" type="application/atom+xml" title="{{ title|escape }}" href="/feed.atom">
 	<link rel="stylesheet" href="/css/base.css">
 	{% block head %}{% endblock head %}
 </head>
