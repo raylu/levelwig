@@ -3,3 +3,4 @@ misaka # markdown
 passlib
 pigwig # web framework
 plyvel # database
+pyatom

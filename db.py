@@ -101,6 +101,9 @@ def default_setting(key, val):
 def update_setting(key, val):
 	settings_db.put(key.encode('ascii'), val.encode('utf-8'))
 
+def get_setting(key):
+	return settings_db.get(key.encode('ascii')).decode('utf-8')
+
 def iter_settings():
 	it = settings_db.iterator()
 	for key, val in it:
@@ -169,6 +172,9 @@ class Post:
 			return self.body
 		else:
 			return self.body[:end] + '\n\n&hellip;'
+
+	def datetime(self):
+		return datetime.datetime.strptime(self.date, '%Y-%m-%d')
 
 def close():
 	db.close()

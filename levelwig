@@ -8,9 +8,9 @@ import re
 import sys
 
 import cleancss
+import misaka
 from pigwig import PigWig, Response
 from pigwig.exceptions import HTTPException
-import misaka
 
 import db
 import gen
@@ -27,6 +27,7 @@ def routes():
 		('GET', '/post/<id>', get_post),
 		('GET', '/post/<id>/<slug>', get_post),
 		('GET', '/css/<path:relpath>', css),
+		('GET', '/feed.atom', get_feed),
 		('GET', '/admin/login', login_form),
 		('POST', '/admin/login', login),
 		('GET', '/admin/logout', logout),
@@ -65,6 +66,9 @@ def css(request, relpath):
 			return Response(cleancss.convert(f), content_type='text/css')
 	except FileNotFoundError:
 		raise HTTPException(404, 'ccss file not found')
+
+def get_feed(request):
+	return Response(gen.get_feed(md), content_type='application/atom+xml')
 
 def login_form(request):
 	return Response.render(request, 'login.jinja2', {})
@@ -220,6 +224,7 @@ md = misaka.Markdown(misaka_renderer, misaka.EXT_AUTOLINK | misaka.EXT_FENCED_CO
 
 def init_settings():
 	db.default_setting('title', 'blog')
+	db.default_setting('url', 'http://localhost:8000')
 	for key, val in db.iter_settings():
 		jinja_env.globals[key] = val
 
