@@ -150,6 +150,8 @@ class Post:
 		self.body = body
 
 	def save(self, batch=None):
+		self.datetime() # check format
+
 		post_id = _pad_num(self.id)
 		flags = 0
 		for name, bit in PostFlag.__members__.items():

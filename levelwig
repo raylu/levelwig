@@ -111,11 +111,14 @@ def admin_settings_form(request, username):
 
 @authed
 def admin_settings(request, username):
-	for key, old_val in db.iter_settings():
-		try:
-			new_val = request.body[key]
-		except KeyError:
+	for key, _ in db.iter_settings():
+		if key not in request.body:
 			raise HTTPException(400, key + ' missing')
+	if request.body['url'][-1] == '/':
+		raise HTTPException(400, 'url should not end with /')
+
+	for key, old_val in db.iter_settings():
+		new_val = request.body[key]
 		if old_val != new_val:
 			db.update_setting(key, new_val)
 			app.template_engine.jinja_env.globals[key] = new_val
