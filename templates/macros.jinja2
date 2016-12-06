@@ -16,7 +16,7 @@
 			{% if full %}
 				{{ post.body|markdown }}
 			{% else %}
-				{{ post.first_paragraph()|markdown }}
+				{{ post.preview()|markdown }}
 			{% endif %}
 		</blockquote>
 	</article>

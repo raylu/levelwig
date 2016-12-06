@@ -168,12 +168,14 @@ class Post:
 		writer.put(post_id, post_data)
 		return post_id
 
-	def first_paragraph(self):
-		end = self.body.find('\n\n')
-		if end == -1:
-			return self.body
-		else:
-			return self.body[:end] + '\n\n&hellip;'
+	def preview(self):
+		''' first paragraph that breaks 250 characters '''
+		end = 0
+		while end < 250:
+			end = self.body.find('\n\n', end + 1)
+			if end == -1:
+				return self.body
+		return self.body[:end] + '\n\n&hellip;'
 
 	def datetime(self):
 		return datetime.datetime.strptime(self.date, '%Y-%m-%d')
