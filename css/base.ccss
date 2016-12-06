@@ -83,6 +83,9 @@ article:
 		img:
 			max-width: 754px
 
+		ol, ul:
+			margin-left: 1em
+
 @media (max-width: 900px):
 	body:
 		font-size: 10px
