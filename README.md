@@ -1,18 +1,21 @@
+#levelwig
 Generate static blogs with a web interface
-Built on leveldb and pigwig
+Built on leveldb and pigwig  
 
-Dev setup:
-git submodule update --init
-sudo apt install libleveldb-dev
-pip3 install -r requirements.txt
-./levelwig dev 8000
 
-Prod setup:
-pip3 install eventlet
-./levelwig gen
-./levelwig prod 8000
+##Dev setup:
+	git submodule update --init
+	sudo apt install libffi-dev libleveldb-dev
+	pip3 install -r requirements.txt
+	./levelwig dev 8000
 
-nginx config:
+##Prod setup:
+	pip3 install eventlet
+	./levelwig gen
+	./levelwig prod 8000
+
+##Configuration for nginx and lighttpd
+###nginx:
 	server {
 		server_name levelwig;
 		listen 80;
@@ -32,7 +35,7 @@ nginx config:
 		}
 	}
 
-lighttpd config:
+###lighttpd:
 	$HTTP["host"] == "levelwig" {
 		server.document-root = "/home/raylu/src/levelwig/public"
 		url.rewrite-once = (
