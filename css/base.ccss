@@ -81,7 +81,7 @@ article:
 			background-color: #222
 
 		img:
-			max-width: 754px
+			max-width: 100%
 
 		ol, ul:
 			margin-left: 1em
