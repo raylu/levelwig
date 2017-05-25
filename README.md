@@ -24,6 +24,7 @@ Built on leveldb and pigwig
 		add_header X-Content-Type-Options nosniff;
 		add_header Content-Security-Policy "default-src none; style-src 'self'; img-src https: 'self'";
 		add_header X-Xss-Protection "1; mode=block";
+		charset utf-8;
 		index index.html;
 		location / {
 			root /home/raylu/src/levelwig/public;
