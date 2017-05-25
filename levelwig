@@ -294,13 +294,7 @@ def main():
 	try:
 		mode = sys.argv[1]
 	except IndexError:
-		print('usage %s [dev|prod|gen]' % sys.argv[0])
-		print()
-		print('\tdev: auto-reloading wsgiref server')
-		print('\tprod: eventlet wsgi server')
-		print('\tgen: generate static content into public/')
-		print()
-		print('on first run, you will be prompted to create a user and password')
+		print_help()
 		return
 
 	if not db.has_users():
@@ -320,6 +314,17 @@ def main():
 		eventlet.wsgi.server(eventlet.listen(('localhost', port)), app)
 	elif mode == 'gen':
 		gen.generate(app)
+	else:
+		print_help()
+
+def print_help():
+	print('usage %s [dev|prod|gen]' % sys.argv[0])
+	print()
+	print('\tdev: auto-reloading wsgiref server')
+	print('\tprod: eventlet wsgi server')
+	print('\tgen: generate static content into public/')
+	print()
+	print('on first run, you will be prompted to create a user and password')
 
 if __name__ == '__main__':
 	main()
