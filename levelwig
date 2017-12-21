@@ -97,12 +97,11 @@ def login(request):
 		password = request.body['password']
 	except KeyError:
 		raise HTTPException(400, 'username or password missing')
-	if db.check_login(username, password):
-		response = Response(code=303, location='/admin')
-		response.set_secure_cookie(request, 'username', username, max_age=LOGIN_TIME)
-		return response
-	else:
+	if not db.check_login(username, password):
 		raise HTTPException(401, 'incorrect username or password')
+	response = Response(code=303, location='/admin')
+	response.set_secure_cookie(request, 'username', username, max_age=LOGIN_TIME)
+	return response
 
 def logout(request):
 	response = Response(code=303, location='/')

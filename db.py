@@ -81,8 +81,9 @@ def toggle_post_flag(post_id, flag, status):
 
 def get_post(post_id, allowed_flags):
 	post = posts_db.get(_pad_num(post_id))
-	if post is not None:
-		return _parse_post(post_id, post, allowed_flags)
+	if post is None:
+		return None
+	return _parse_post(post_id, post, allowed_flags)
 
 def iter_posts(allowed_flags):
 	post_count = posts_db.get(b'count', b'000000')
