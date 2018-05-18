@@ -1,20 +1,20 @@
 # levelwig
-Generate static blogs with a web interface
-Built on leveldb and pigwig  
+generate static blogs with a web interface
 
+built on [leveldb](http://leveldb.org/) and [pigwig](https://github.com/raylu/pigwig)
 
-## Dev setup:
+## dev setup:
 	git submodule update --init
 	sudo apt install libffi-dev libleveldb-dev
 	pip3 install -r requirements.txt
 	./levelwig dev 8000
 
-## Prod setup:
+## prod setup:
 	pip3 install eventlet
 	./levelwig gen
 	./levelwig prod 8000
 
-## Configuration for nginx and lighttpd
+## webserver configuration
 ### nginx:
 	server {
 		server_name levelwig;
