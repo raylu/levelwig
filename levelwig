@@ -9,11 +9,11 @@ from os import path
 import re
 import sys
 
-import cleancss
 import misaka
 from pigwig import PigWig, Response
 from pigwig.exceptions import HTTPException
 
+import cleancss
 import db
 import gen
 

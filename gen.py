@@ -2,9 +2,9 @@ import os
 from os import path
 import shutil
 
-import cleancss
 import pyatom
 
+import cleancss
 import db
 
 levelwig_dir = path.normpath(path.dirname(path.abspath(__file__)))
