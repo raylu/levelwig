@@ -308,8 +308,8 @@ def main():
 	if mode == 'dev':
 		app.main(port=port)
 	elif mode == 'prod':
-		import eventlet
-		import eventlet.wsgi
+		import eventlet # pylint: disable=import-outside-toplevel
+		import eventlet.wsgi # pylint: disable=import-outside-toplevel
 		eventlet.wsgi.server(eventlet.listen(('localhost', port)), app)
 	elif mode == 'gen':
 		gen.generate(app)
