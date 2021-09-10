@@ -1,0 +1,26 @@
+# https://docs.github.com/en/actions/guides/building-and-testing-python
+
+name: CI
+
+on:
+  push:
+    branches: '*'
+  pull_request:
+    branches: '*'
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: install pylint
+      run: pip3 install --quiet pylint
+
+    - name: pylint
+      run: pylint levelwig *.py
