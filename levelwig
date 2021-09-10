@@ -80,7 +80,7 @@ def css(request, relpath):
 	name, _ = path.splitext(relpath)
 	ccss_path = path.join(css_dir, name) + '.ccss'
 	try:
-		with open(ccss_path, 'r') as f:
+		with open(ccss_path, 'r', encoding='utf-8') as f:
 			return Response(cleancss.convert(f), content_type='text/css')
 	except FileNotFoundError:
 		raise HTTPException(404, 'ccss file not found')

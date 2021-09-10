@@ -33,7 +33,7 @@ def generate(app):
 			f.write(buf)
 
 	md = app.template_engine.jinja_env.filters['markdown']
-	with open(path.join(public_dir, 'feed.atom'), 'w') as f:
+	with open(path.join(public_dir, 'feed.atom'), 'w', encoding='utf-8') as f:
 		f.write(get_feed(md))
 
 	for post in db.iter_posts(allowed_flags=db.PostFlag.draft):
@@ -49,7 +49,7 @@ def generate(app):
 			reldir = absdir[len(css_dir):]
 			relname, _ = path.splitext(path.join(reldir, filename))
 			css_path = path.join(public_dir, 'css', relname) + '.css'
-			with open(ccss_path, 'r') as ccss, open(css_path, 'w') as css:
+			with open(ccss_path, 'r', encoding='utf-8') as ccss, open(css_path, 'w', encoding='utf-8') as css:
 				css.write(cleancss.convert(ccss))
 
 def get_feed(md):
